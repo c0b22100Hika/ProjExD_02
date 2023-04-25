@@ -58,8 +58,9 @@ def main():
         pg.draw.circle(bomb_img, (255, 0, 0), (10*r, 10*r), 10*r)
         bomb_imgs.append(bomb_img)
     vx, vy = 1, 1
-    bomb_rct = bomb_img.get_rect()  #爆弾の画像をそのまま使うのでなく、新しく四角を作って動かす
-    bomb_rct.center = b_x, b_y  #爆弾の中心の位置
+    avx, avy = 1, 1
+    bomb_rct = bomb_img.get_rect()  # 爆弾の画像をそのまま使うのでなく、新しく四角を作って動かす
+    bomb_rct.center = b_x, b_y  # 爆弾の中心の位置
 
     
 
@@ -124,11 +125,6 @@ def main():
         screen.blit(bg_img, [0, 0])  # 背景描画
         screen.blit(kk_img, kk_rct)  # こうかとんの描画
         
-        
-
-        avx, avy = vx*accs[min(tmr//1000, 9)], vy*accs[min(tmr//1000, 9)]
-        bomb_img = bomb_imgs[min(tmr//1000, 9)]
-
         yoko, tate = check_bound(screen.get_rect(), bomb_rct)
 
         if not yoko:
@@ -136,10 +132,13 @@ def main():
         if not tate:
             vy *= -1
 
+        avx, avy = vx*accs[min(tmr//1000, 9)], vy*accs[min(tmr//1000, 9)]
+        bomb_img = bomb_imgs[min(tmr//1000, 9)]
+
 
         bomb_rct.move_ip(avx, avy)  # 爆弾の場所を変化させる
         screen.blit(bomb_img, bomb_rct)  # 爆弾の描画
-        
+        bomb_img.set_colorkey((0, 0, 0))
 
         """
         if kk_rct.colliderect(bomb_rct):  # オブジェクトの重なりを確認
