@@ -71,7 +71,7 @@ def main():
     vx, vy = 1, 1
     avx, avy = 1, 1
     bomb_rct = bomb_img.get_rect()  # 爆弾の画像をそのまま使うのでなく、新しく四角を作って動かす
-    bomb_rct.center = b_x, b_y  # 爆弾の中心の位置
+    bomb_rct.center = b_x, b_y  # 爆弾の中心の位置  
 
     tmr = 0
 
