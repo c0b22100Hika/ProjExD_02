@@ -31,6 +31,7 @@ def check_bound(scr_rct: pg.Rect, obj_rct: pg.Rect) -> tuple[bool, bool]:
 
 
 def main():
+    # 以下こうかとんについて
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((1600, 900))
     clock = pg.time.Clock()
@@ -40,17 +41,30 @@ def main():
     kk_rct = kk_img.get_rect()
     kk_rct.center = (900, 400)
 
-    tmr = 0
-
+    # 以下爆弾について
     bomb_img = pg.Surface((20,20))  # ボムのイメージを作る四角を作る
     pg.draw.circle(bomb_img, (255, 0, 0), (10,10), 10)  # 作った四角の中のどこかに円を作る
     bomb_img.set_colorkey((0, 0, 0))  # 四角の黒い部分を透明化
     b_x = random.randint(0,1600) # ボムのｘ座標
     b_y = random.randint(0,900)  # ボムのｙ座標
     #screen.blit(bomb_img, [b_x, b_y])  # 爆弾の描画
+    
+
+    accs = [a for a in range(1, 11)]
+
+    bomb_imgs = []
+    for r in range(1, 11):
+        bomb_img = pg.Surface((20*r, 20*r))
+        pg.draw.circle(bomb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        bomb_imgs.append(bomb_img)
     vx, vy = 1, 1
     bomb_rct = bomb_img.get_rect()  #爆弾の画像をそのまま使うのでなく、新しく四角を作って動かす
     bomb_rct.center = b_x, b_y  #爆弾の中心の位置
+
+    
+
+
+    tmr = 0
 
     # イベントの処理
     while True:
@@ -61,6 +75,41 @@ def main():
         tmr += 1
 
         key_list = pg.key.get_pressed()
+
+        if key_list[pg.K_UP] == True and key_list[pg.K_DOWN] == False and key_list[pg.K_RIGHT] == False and key_list[pg.K_LEFT] == False :
+            kk_img = pg.image.load("ex02/fig/3.png")
+            kk_img = pg.transform.flip(kk_img, True, False)
+            kk_img = pg.transform.rotozoom(kk_img,90,2.0)
+        elif key_list[pg.K_UP] == True and key_list[pg.K_DOWN] == False and key_list[pg.K_RIGHT] == True and key_list[pg.K_LEFT] == False :
+            kk_img = pg.image.load("ex02/fig/3.png")
+            kk_img = pg.transform.flip(kk_img, True, False)
+            kk_img = pg.transform.rotozoom(kk_img,45,2.0)
+        elif key_list[pg.K_UP] == False and key_list[pg.K_DOWN] == False and key_list[pg.K_RIGHT] == True and key_list[pg.K_LEFT] == False :
+            kk_img = pg.image.load("ex02/fig/3.png")
+            kk_img = pg.transform.flip(kk_img, True, False)
+            kk_img = pg.transform.rotozoom(kk_img,0,2.0)
+        elif key_list[pg.K_UP] == False and key_list[pg.K_DOWN] == True and key_list[pg.K_RIGHT] == True and key_list[pg.K_LEFT] == False :
+            kk_img = pg.image.load("ex02/fig/3.png")
+            kk_img = pg.transform.flip(kk_img, True, False)
+            kk_img = pg.transform.rotozoom(kk_img,-45,2.0)
+        elif key_list[pg.K_UP] == False and key_list[pg.K_DOWN] == True and key_list[pg.K_RIGHT] == False and key_list[pg.K_LEFT] == False :
+            kk_img = pg.image.load("ex02/fig/3.png")
+            kk_img = pg.transform.flip(kk_img, True, False)
+            kk_img = pg.transform.rotozoom(kk_img,-90,2.0)
+        elif key_list[pg.K_UP] == False and key_list[pg.K_DOWN] == True and key_list[pg.K_RIGHT] == False and key_list[pg.K_LEFT] == True :
+            kk_img = pg.image.load("ex02/fig/3.png")
+            #kk_img = pg.transform.flip(kk_img, True, False)
+            kk_img = pg.transform.rotozoom(kk_img,45,2.0)
+        elif key_list[pg.K_UP] == False and key_list[pg.K_DOWN] == False and key_list[pg.K_RIGHT] == False and key_list[pg.K_LEFT] == True :
+            kk_img = pg.image.load("ex02/fig/3.png")
+            #kk_img = pg.transform.flip(kk_img, True, False)
+            kk_img = pg.transform.rotozoom(kk_img,0,2.0)
+        elif key_list[pg.K_UP] == True and key_list[pg.K_DOWN] == False and key_list[pg.K_RIGHT] == True and key_list[pg.K_LEFT] == False :
+            kk_img = pg.image.load("ex02/fig/3.png")
+            kk_img = pg.transform.flip(kk_img, True, False)
+            kk_img = pg.transform.rotozoom(kk_img,-45,2.0)
+            
+
         for k, mv in delta.items():
             if key_list[k]:
                 kk_rct.move_ip(mv)  #こうかとんの場所を変化させる
@@ -68,8 +117,8 @@ def main():
             for k, mv in delta.items():
                 if key_list[k]:
                     kk_rct.move_ip(-mv[0], -mv[1])  #こうかとんの場所を変化させる
-
-
+        
+        
         
 
         screen.blit(bg_img, [0, 0])  # 背景描画
@@ -82,12 +131,18 @@ def main():
         if not tate:
             vy *= -1
 
-        bomb_rct.move_ip(vx, vy)  #爆弾の場所を変化させる
+        avx, avy = vx*accs[min(tmr//1000, 9)], vy*accs[min(tmr//1000, 9)]
+        bomb_img = bomb_imgs[min(tmr//1000, 9)]
+
+
+        bomb_rct.move_ip(avx, avy)  # 爆弾の場所を変化させる
         screen.blit(bomb_img, bomb_rct)  # 爆弾の描画
+        bomb_img.set_colorkey((0, 0, 0))
 
-        if kk_rct.colliderect(bomb_rct):
+        """
+        if kk_rct.colliderect(bomb_rct):  # オブジェクトの重なりを確認
             return 0
-
+        """
         pg.display.update()
         clock.tick(1000)
 
