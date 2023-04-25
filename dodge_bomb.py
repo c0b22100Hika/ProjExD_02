@@ -19,6 +19,13 @@ def main():
     b_x = random.randint(0,1600) # ボムのｘ座標
     b_y = random.randint(0,900)  # ボムのｙ座標
 
+    #screen.blit(bomb_img, [b_x, b_y])  # 爆弾の描画
+
+    vx, vy = 0, 0
+
+    bomb_rct = bomb_img.get_rect()
+    bomb_rct.center = b_x, b_y
+
 
     # イベントの処理
     while True:
@@ -27,11 +34,18 @@ def main():
                 return 0
 
         tmr += 1
+
+        vx, vy = +1, +1
+
         screen.blit(bg_img, [0, 0])  # 背景描画
         screen.blit(kk_img, [900, 400])  # こうかとんの描画
 
+        screen.blit(bomb_img, bomb_rct)  # 爆弾の描画
+
+        bomb_rct.move_ip(vx, vy)
+
+
         
-        screen.blit(bomb_img, [b_x, b_y])  # 爆弾の描画
 
 
 
