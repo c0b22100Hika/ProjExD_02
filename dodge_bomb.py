@@ -85,7 +85,8 @@ def main():
         bomb_rct.move_ip(vx, vy)  #爆弾の場所を変化させる
         screen.blit(bomb_img, bomb_rct)  # 爆弾の描画
 
-        
+        if kk_rct.colliderect(bomb_rct):
+            return 0
 
         pg.display.update()
         clock.tick(1000)
